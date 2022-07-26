@@ -1,0 +1,15 @@
+{
+  "name": "wangkepu-scraper",
+  "version": "1.0.0",
+  "main": "index.js",
+  "description": "网课铺 wangkepu.com 爬虫",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qiangmouren/wangkepu-scraper"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "cheerio": "^1.0.0-rc.10",
+    "iconv-lite": "^0.6.3"
+  }
+}
