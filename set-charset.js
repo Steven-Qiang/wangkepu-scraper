@@ -5,14 +5,14 @@
  * @create: 2022-03-10 05:08:19
  * @author: qiangmouren (2962051004@qq.com)
  * -----
- * @last-modified: 2022-07-26 02:58:42
+ * @last-modified: 2022-11-12 04:17:37
  * -----
  */
 
 const fs = require('fs');
 const path = require('path');
 const iconv = require('iconv-lite');
-const output = path.relative('2000');
+const output = path.relative(__dirname, '2000');
 
 (async () => {
   for (const iterator of await fs.promises.readdir(output)) {

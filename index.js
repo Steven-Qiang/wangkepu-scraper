@@ -5,23 +5,28 @@
  * @create: 2021-11-25 07:37:15
  * @author: qiangmouren (2962051004@qq.com)
  * -----
- * @last-modified: 2022-07-26 02:57:55
+ * @last-modified: 2022-11-12 04:27:53
  * -----
  */
 
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios').default;
-const output = path.relative('2000');
+
+const output = path.join(__dirname, '2000');
+const retry = require('axios-retry');
+const instance = axios.create({
+  baseURL: 'http://www.iamooc.com',
+  timeout: 1000 * 300,
+});
+retry(instance, {
+  retries: 3,
+});
 
 (async () => {
   const docs_urls_set = new Set();
   const page_urls_set = new Set();
-  const index_urls = [
-    'http://www.wangkepu.com/chaoxing$.htm',
-    'http://www.wangkepu.com/zhihuishu$.htm',
-    'http://www.wangkepu.com/zhongguodaxue$.htm',
-  ];
+  const index_urls = ['chaoxing$.htm', 'zhihuishu$.htm', 'zhongguodaxue$.htm'];
   async function fetch(url, page = 1) {
     const pURL = url.replace('$', page);
     if (page_urls_set.has(pURL)) {
@@ -31,7 +36,7 @@ const output = path.relative('2000');
     page_urls_set.add(pURL);
     let resp;
     try {
-      resp = await axios.get(pURL);
+      resp = await instance.get(pURL);
     } catch (error) {}
     if (!resp) {
       console.log(page, '---', pURL, '请求失败');
@@ -39,13 +44,13 @@ const output = path.relative('2000');
     }
     const content = `${resp.data}`;
     for (const iterator of content.matchAll(/2000\/\d+.htm/g)) {
-      const url = 'http://www.wangkepu.com/' + iterator[0];
+      const url = iterator[0];
       docs_urls_set.add(url);
       const filename = path.join(output, path.basename(url));
       if (fs.existsSync(filename)) continue;
       console.log('----', url);
       try {
-        await axios.get(url, { responseType: 'arraybuffer' }).then(({ data }) => {
+        await instance.get(url, { responseType: 'arraybuffer' }).then(({ data }) => {
           return fs.promises.writeFile(filename, data);
         });
       } catch (error) {
@@ -53,7 +58,7 @@ const output = path.relative('2000');
       }
     }
 
-    for (const [, _page] of content.matchAll(/<a href="(http:\/\/www.wangkepu.com\/[a-z]+\d+.htm)">(\d+)<\/a>/g)) {
+    for (const [, _page] of content.matchAll(/<a href="[a-z]+\d+.htm">(\d+)<\/a>/g)) {
       if (_page == page) continue;
       await fetch(url, _page);
     }
