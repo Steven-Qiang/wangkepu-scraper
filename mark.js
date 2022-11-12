@@ -5,7 +5,7 @@
  * @create: 2022-11-12 04:05:11
  * @author: qiangmouren (2962051004@qq.com)
  * -----
- * @last-modified: 2022-11-12 04:14:01
+ * @last-modified: 2022-11-12 05:00:10
  * -----
  */
 
@@ -49,6 +49,5 @@ const output = path.join(__dirname, '2000');
       }
     }
     await fs.promises.writeFile(file, $.html());
-    return;
   }
 })();
