@@ -5,7 +5,7 @@
   "description": "网课铺 wangkepu.com 爬虫",
   "repository": {
     "type": "git",
-    "url": "https://github.com/qiangmouren/wangkepu-scraper"
+    "url": "https://github.com/Steven-Qiang/wangkepu-scraper"
   },
   "dependencies": {
     "axios": "^0.24.0",
